@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.*;
 public class TodoController {
     @Autowired
     private TodoRepository repo;
+    @Autowired
+    private UserRepository userRepo;
 
     @GetMapping("/{userId}")
     public List<Todo> getAllByUser(@PathVariable Long userId) {
-        return repo.findByUserId(userId);
+        User user = userRepo.findById(userId).orElseThrow();
+        return repo.findByUser(user);
     }
 
     @PostMapping

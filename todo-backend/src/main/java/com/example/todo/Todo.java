@@ -1,9 +1,6 @@
 package com.example.todo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Todo {
@@ -12,17 +9,18 @@ public class Todo {
     private Long id;
     private String task;
     private boolean completed;
-    private Long userId; // どのユーザーのToDoか
 
-    // デフォルトコンストラクタ（JPA必須）
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // 外部キー列名
+    private User user; // Userエンティティへの参照
+
     public Todo() {
     }
 
-    // コンストラクタ
-    public Todo(String task, boolean completed, Long userId) {
+    public Todo(String task, boolean completed, User user) {
         this.task = task;
         this.completed = completed;
-        this.userId = userId;
+        this.user = user;
     }
 
     // Getter/Setter
@@ -32,6 +30,6 @@ public class Todo {
     public void setTask(String task) { this.task = task; }
     public boolean isCompleted() { return completed; }
     public void setCompleted(boolean completed) { this.completed = completed; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

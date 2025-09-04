@@ -1,10 +1,8 @@
 package com.example.todo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,6 +14,9 @@ public class User {
     private String email;
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Todo> todos = new ArrayList<>(); // ユーザーのToDoリスト
+
     public User() {
     }
 
@@ -25,6 +26,7 @@ public class User {
         this.password = password;
     }
 
+    // Getter/Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getUsername() { return username; }
@@ -33,4 +35,12 @@ public class User {
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public List<Todo> getTodos() { return todos; }
+    public void setTodos(List<Todo> todos) { this.todos = todos; }
+
+    // ヘルパーメソッド（ToDo追加用）
+    public void addTodo(Todo todo) {
+        todos.add(todo);
+        todo.setUser(this);
+    }
 }
